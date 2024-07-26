@@ -26,24 +26,24 @@ workflow EASYBUILD {
 	
 	// Print the samples
 	samples.view { it -> "Parsed sample: config=${it[0]}, software=${it[1]}, version=${it[2]}" }
-
+	
+	easybuild_out_log = Channel.empty()
+	easybuild_out_err = Channel.empty()
 
 	samples.flatMap { config, software, version ->	
 		EASYBUILD_INSTALLATION(config, software, version) 
 	}
-	EASYBUILD_INSTALLATION.out.installedLogs.subscribe { logFile -> 
-	
-	println "Log file created: $logFile" 
-	}
+	easybuild_out_log = EASYBUILD_INSTALLATION.out.installedLogs
+	easybuild_out_err = EASYBUILD_INSTALLATION.out.errLogs
 
+	
+	checkinstall_out_ch = Channel.empty()
+	
 	samples.flatMap{ config, software, version -> 
 		CHECK_INSTALLATION(config, software, version) 
 
 	}
-	
-	CHECK_INSTALLATION.out.log.subscribe { logFile -> 
-		println "check log file created: $logFile"
-	}
+	checkinstall_out_ch = CHECK_INSTALLATION.out.log
 
 }
 
