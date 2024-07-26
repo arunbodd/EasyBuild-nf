@@ -5,6 +5,7 @@ process EASYBUILD_INSTALLATION {
 
     output:
     file("${params.outdir}/logs/${software}-${version}.log"), emit: installedLogs
+    file("${params.outdir}/logs/${software}-${version}.err),  emit: errLogs
 
     script:
 
