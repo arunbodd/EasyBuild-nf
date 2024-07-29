@@ -4,6 +4,7 @@ process EASYBUILD_INSTALLATION {
     
     input:
         tuple val(config), val(software), val(version)
+        ebPath
 
     output:
         path(".log"),           emit: ebLogs
@@ -15,7 +16,7 @@ process EASYBUILD_INSTALLATION {
     source /apps/x86_64/scbs/easybuild_setup.sh
     module load EasyBuild
 
-    eb $config \
+    eb $ebPath/$config \
         --robot \
         --detect-loaded-modules=unload \
         --accept-eula-for=CUDA > ${software}-${version}.log 2> ${software}-${version}.err

@@ -30,7 +30,7 @@ workflow EASYBUILD {
                 def version = row.version
                 return [config, software, version]
             }
-    EASYBUILD_INSTALLATION(ch_input)
+    EASYBUILD_INSTALLATION(ch_input, params.ebPath)
     // CHECK_INSTALLATION(config, software, version)
 }
 

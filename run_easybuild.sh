@@ -115,7 +115,7 @@ if [[ $flag == "single" ]]; then
             echo "**** Install: Install module $software/$version ****"
 
             # install the module
-            eb $config --robot --detect-loaded-modules=unload --accept-eula-for=CUDA
+            eb $ebPath/$config --robot --detect-loaded-modules=unload --accept-eula-for=CUDA
 
             # Check if the module exist
             if module avail 2>&1 | grep -q "$software/$version*"; then
