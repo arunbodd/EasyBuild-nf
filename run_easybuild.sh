@@ -45,8 +45,8 @@ ebPath="/scicomp/groups-pure/Projects/easybuild/easybuild-easyconfigs/easybuild/
 echo "**************************************************************"
 if [[ $flag == "check" ]]; then
 	echo "Process: Checking installations"
-elif [[ $flag == "run" ]]; then
-        echo "Process: Running Builds"
+elif [[ $flag == "nf" ]]; then
+        echo "Process: Running NF Pipeline"
 elif [[ $flag == "cleanup" ]]; then
 	echo "Process: Post cleanup"
 elif [[ $flag == "single" ]]; then
@@ -59,7 +59,7 @@ echo "**************************************************************"
 ##########################################################################
 # check input file
 echo "**************************************************************"
-if [[ ! -f $inputFile ]]; then 
+if [[ ! -f $inputFile ]] && [[ ! $flag == "post" ]]; then 
         echo "Missing input file"
         exit
 else
@@ -69,7 +69,7 @@ echo "**************************************************************"
 
 ##########################################################################
 # check outDir
-if [[ $outDir == "" ]]; then
+if [[ $outDir == "" ]] && [[ ! $flag == "post" ]]; then
     echo "You must specify an outDir"
     exit
 fi
@@ -126,7 +126,7 @@ if [[ $flag == "single" ]]; then
             fi
         fi
     done < $inputFile
-elif [[ $flag == "run" ]]; then
+elif [[ $flag == "nf" ]]; then
         nextflow run main.nf \
         --input $inputFile \
         --outdir $outDir \
