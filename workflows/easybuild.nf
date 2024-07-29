@@ -9,9 +9,8 @@
 //
 // MODULE: Installed directly from nf-core/modules
 //
-
 include { EASYBUILD_INSTALLATION		} from '../modules/local/easybuild_parallelisation.nf'
-include { CHECK_INSTALLATION			} from '../modules/local/check_installation.nf'
+// include { CHECK_INSTALLATION			} from '../modules/local/check_installation.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,32 +18,20 @@ include { CHECK_INSTALLATION			} from '../modules/local/check_installation.nf'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-samples = Channel.fromPath(params.input).splitCsv(sep: ',')
-
-
+// Define the workflow
 workflow EASYBUILD {
-	
-	// Print the samples
-	samples.view { it -> "Parsed sample: config=${it[0]}, software=${it[1]}, version=${it[2]}" }
-	
-	easybuild_out_log = Channel.empty()
-	easybuild_out_err = Channel.empty()
-
-	samples.flatMap { config, software, version ->	
-		EASYBUILD_INSTALLATION(config, software, version) 
-	}
-	easybuild_out_log = EASYBUILD_INSTALLATION.out.installedLogs
-	easybuild_out_err = EASYBUILD_INSTALLATION.out.errLogs
-
-	
-	checkinstall_out_ch = Channel.empty()
-	
-	samples.flatMap{ config, software, version -> 
-		CHECK_INSTALLATION(config, software, version) 
-
-	}
-	checkinstall_out_ch = CHECK_INSTALLATION.out.log
-
+    
+    ch_input = Channel
+        .from(file(params.input))
+        .splitCsv ( header:true, sep:',' )
+            .map { row ->
+                def config = row.config
+                def software = row.software
+                def version = row.version
+                return [config, software, version]
+            }
+    EASYBUILD_INSTALLATION(ch_input)
+    // CHECK_INSTALLATION(config, software, version)
 }
 
 /*

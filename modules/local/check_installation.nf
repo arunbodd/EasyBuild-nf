@@ -6,7 +6,7 @@ process CHECK_INSTALLATION {
 
     output:
 
-    file("${params.outdir}/logs/${software}-${version}-check.log") , emit: log
+    file("${software}-${version}-check.log") , emit: statusLog
     
     script:
     """
@@ -14,9 +14,9 @@ process CHECK_INSTALLATION {
 	module use /modules/by-environ/generic-release/all
 
 	if module avail 2>&1 | grep -q "$software/$version"; then
-        	echo "Module is installed: $software/$version" > ${params.outdir}/logs/${software}-${version}-check.log
+        	echo "Module is installed: $software/$version" > ${software}-${version}-check.log
     	else
-        	echo "Module is not installed: $software/$version" > ${params.outdir}/logs/${software}-${version}-check.log
+        	echo "Module is not installed: $software/$version" > ${software}-${version}-check.log
     	fi
     """
 }
