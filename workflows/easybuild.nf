@@ -19,31 +19,20 @@ include { CHECK_INSTALLATION			} from '../modules/local/check_installation.nf'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-samples = Channel.fromPath(params.input).splitCsv(sep: ',')
-
-
+Channel
+    .fromPath(params.input)
+    .splitCsv(header:true, sep: ',')
+    .map { row -> tuple(row.configfile, row.software, row.version) }
+    .set { sample_ch }
+sample_ch.view { "Sample channel: $it" }
 workflow EASYBUILD {
 	
 	// Print the samples
-	samples.view { it -> "Parsed sample: config=${it[0]}, software=${it[1]}, version=${it[2]}" }
-	
-	easybuild_out_log = Channel.empty()
-	easybuild_out_err = Channel.empty()
 
-	samples.flatMap { config, software, version ->	
-		EASYBUILD_INSTALLATION(config, software, version) 
-	}
-	easybuild_out_log = EASYBUILD_INSTALLATION.out.installedLogs
-	easybuild_out_err = EASYBUILD_INSTALLATION.out.errLogs
-
-	
-	checkinstall_out_ch = Channel.empty()
-	
-	samples.flatMap{ config, software, version -> 
-		CHECK_INSTALLATION(config, software, version) 
-
-	}
-	checkinstall_out_ch = CHECK_INSTALLATION.out.log
+	EASYBUILD_INSTALLATION(sample_ch) 
+	//CHECK_INSTALLATION(sample_ch)
+   //EASYBUILD_INSTALLATION.out.installedLogs
+    //EASYBUID_INSTALLATION.out.errLogs
 
 }
 
