@@ -1,9 +1,14 @@
 process EASYBUILD_INSTALLATION {
-    label 'process_medium'
+    label 'process_low'
+    tag "$software"
     
     input:
-    tuple val(config), val(software), val(version)
+        tuple val(config), val(software), val(version)
+        ebPath
 
+    output:
+        path(".log"),           emit: ebLogs
+        path(".err"),           emit: ebErr
 
     script:
 
@@ -11,8 +16,9 @@ process EASYBUILD_INSTALLATION {
     source /apps/x86_64/scbs/easybuild_setup.sh
     module load EasyBuild
 
-    config_path="${params.ebpath}/${config}"
-
-    eb \$config_path --robot --allow-loaded-modules=Java/11.0.20,Nextflow/24.04.2
+    eb $ebPath/$config \
+        --robot \
+        --detect-loaded-modules=unload \
+        --accept-eula-for=CUDA > ${software}-${version}.log 2> ${software}-${version}.err
     """
 }
