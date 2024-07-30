@@ -1,0 +1,10 @@
+configfile,software,version
+f/Flye/Flye-2.8.3-GCC-10.2.0.eb,flye,2.8.3
+q/Qualimap/Qualimap-2.2.1-foss-2021b-R-4.1.2.eb,Qualimap,2.2.1
+s/SRST2/SRST2-0.2.0-20210620-foss-2020b-Python-2.7.18.eb,SRST2,0.2.0
+v/vcflib/vcflib-1.0.9-gfbf-2023a-R-4.3.2.eb,vcflib,1.0.9
+c/canu/canu-2.2-GCC-12.2.0.eb,canu,2.2
+m/MUMmer/MUMmer-4.0.0rc1-GCCcore-12.3.0.eb,MUMmer,4.0.0
+g/GLIMMER/GLIMMER-3.02b-foss-2016b.eb,GLIMMER,3.02b
+r/RAxML/RAxML-8.2.11-intel-2018a-hybrid-avx2.eb,RAxML,8.2.11
+k/KAT/KAT-2.4.2-foss-2019a-Python-3.7.2.eb,Kat,2.4.2
